@@ -1,0 +1,29 @@
+.search-suggestion{
+    display: flex;
+    color: #111;
+    margin: 10px 0px;
+    padding: 0px 0px 10px 10px;
+    text-decoration: none;
+    border-bottom: 0.1px solid #ddd;
+}
+
+.search-suggestion > div{
+    display: flex;
+}
+
+.search-suggestion .details{
+    margin-left: 5px;
+}
+
+.search-suggestion:hover{
+    color: #111;
+}
+
+.search-suggestion .poster{
+    height: 60px;
+    width: 40px;
+}
+
+.search-suggestion .release-date{
+    font-size: 12px;
+}

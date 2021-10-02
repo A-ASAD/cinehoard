@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Row } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
+import jwt_decode from "jwt-decode"
+
+import { userLogin } from '../actions/auth'
+
 
 export default function Signup() {
 
@@ -11,6 +16,8 @@ export default function Signup() {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [isErrorOnRegister, setIsErrorOnRegister] = useState(false);
+    const dispatch = useDispatch();
+    const {token} = useSelector(state => state.auth)
 
     const registerUser = async () => {
         const response = await fetch('http://localhost:8000/api/user/register/',
@@ -37,7 +44,10 @@ export default function Signup() {
             const response = await registerUser();
             // redirect to dashboard if valid user else show error message
             if(response.access){
-                localStorage.setItem('token', response.access)
+                dispatch(userLogin({
+                    access: response.access,
+                    user: jwt_decode(response.access).user,
+                }))
                 history.push("/");
             }
             else{
@@ -48,7 +58,7 @@ export default function Signup() {
 
     useEffect(() => {
         // redirect to dashboard if alreday logged in
-        if(localStorage.getItem('token')){
+        if(token){
             history.push('/')
         }
         // eslint-disable-next-line
