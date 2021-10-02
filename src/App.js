@@ -28,12 +28,12 @@ function App() {
                     <Header />
                 </PrivateRoute>
                 <Switch>
-                    <Route exact path="/"><Dashboard /></Route>
-                    <Route path='/movie/:id' ><MovieDetails /></Route>
+                    <PrivateRoute exact path="/"><Dashboard /></PrivateRoute>
+                    <PrivateRoute path='/movie/:id' ><MovieDetails /></PrivateRoute>
                     <Route path="/login"><Login /></Route>
                     <Route path="/signup"><Signup /></Route>
-                    <Route path="/favourites"><Favourites /></Route>
-                    <Route path="/watchlist"><Watchlist /></Route>
+                    <PrivateRoute path="/favourites"><Favourites /></PrivateRoute>
+                    <PrivateRoute path="/watchlist"><Watchlist /></PrivateRoute>
                 </Switch>
             </Router>
             </PersistGate>
