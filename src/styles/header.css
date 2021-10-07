@@ -11,6 +11,7 @@
     border: 1px solid #444;
     padding: 10px 0px;
     background-color: #222;
+    font-size: small;
     border-radius: 5px;
     top: 110%;
     width: 150px;
@@ -18,8 +19,23 @@
     z-index: 10;
 }
 
+.header .nav-links{
+    display: flex !important;
+    align-items: center !important;
+}
+
+.header .nav-links a{
+    text-decoration: none;
+    color: #eee;
+}
+
+.header .nav-links a:hover{
+    color: #aaa;
+}
+
 .header .menu div{
-    font-weight: 500;
+    font-weight: bold;
+    font-size: small;
     padding: 5px 10px;
     text-align: center;
     cursor: pointer;
@@ -27,6 +43,7 @@
 
 .header .menu div:hover{
     background-color: #444;
+    color: #fff;
 }
 
 @media only screen and (max-width: 768px){

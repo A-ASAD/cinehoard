@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import jwt_decode from "jwt-decode"
 
-import { userLogin } from '../actions/auth'
+import { userLogin } from '../store/auth/actions'
+import { sendRequest } from '../wrappers/apiWrappers'
 
 
 export default function Signup() {
@@ -19,18 +20,6 @@ export default function Signup() {
     const dispatch = useDispatch();
     const {token} = useSelector(state => state.auth)
 
-    const registerUser = async () => {
-        const response = await fetch('http://localhost:8000/api/user/register/',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password, email })
-            });
-        return await response.json();
-    }
-
     const handleSubmit = async (event) => {
         const form = event.currentTarget;
         // validate form data and then validate user
@@ -41,12 +30,20 @@ export default function Signup() {
         }
         else{
             event.preventDefault();
-            const response = await registerUser();
+            const response = await sendRequest(
+                `user/register/`,
+                'post',
+                token,
+                { username, password, email }
+                );
             // redirect to dashboard if valid user else show error message
             if(response.access){
                 dispatch(userLogin({
                     access: response.access,
                     user: jwt_decode(response.access).user,
+                    firstname: jwt_decode(response.access).firstname,
+                    lastname: jwt_decode(response.access).lastname,
+                    email: jwt_decode(response.access).email,
                 }))
                 history.push("/");
             }
@@ -76,7 +73,7 @@ export default function Signup() {
                                 type="text"
                                 placeholder="Enter username"
                                 value={username}
-                                onChange={(e)=>setUsername(e.target.value)}
+                                onChange={(e)=>setUsername(e.target.value.trim())}
                             />
                             <Form.Control.Feedback type='invalid'>Username is required!</Form.Control.Feedback>
                         </Form.Group>
@@ -86,7 +83,7 @@ export default function Signup() {
                                 type="email"
                                 placeholder="Enter email"
                                 value={email}
-                                onChange={(e)=>setEmail(e.target.value)}
+                                onChange={(e)=>setEmail(e.target.value.trim())}
                             />
                             <Form.Control.Feedback  type='invalid'>Invalid email!</Form.Control.Feedback>
                         </Form.Group>
@@ -96,7 +93,7 @@ export default function Signup() {
                                 type="password"
                                 placeholder="Enter password"
                                 value={password}
-                                onChange={(e)=>setPassword(e.target.value)}
+                                onChange={(e)=>setPassword(e.target.value.trim())}
                             />
                             <Form.Control.Feedback  type='invalid'>Password is required!</Form.Control.Feedback>
                         </Form.Group>

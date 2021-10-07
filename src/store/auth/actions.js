@@ -2,7 +2,7 @@ import {
     LOGIN_USER,
     LOGOUT_USER,
     USER_LOADING
-} from '../types/auth'
+} from './types'
 
 export const userLogin = (payload) => ({
     type: LOGIN_USER,

@@ -5,7 +5,8 @@ import { Link, useHistory } from 'react-router-dom'
 import jwt_decode from "jwt-decode";
 
 
-import { userLogin } from '../actions/auth'
+import { userLogin } from '../store/auth/actions'
+import { sendRequest } from '../wrappers/apiWrappers';
 
 export default function Login() {
 
@@ -18,19 +19,6 @@ export default function Login() {
     const dispatch = useDispatch();
     const {token} = useSelector(state => state.auth)
 
-
-    const validateUser = async () => {
-        const response = await fetch('http://localhost:8000/api/user/login/',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password })
-            });
-        return await response.json();
-    }
-
     const handleSubmit = async (event) => {
         const form = event.currentTarget;
         // validate form data and then validate user
@@ -41,12 +29,20 @@ export default function Login() {
         }
         else{
             event.preventDefault();
-            const response = await validateUser();
+            const response = await sendRequest(
+                `user/login/`,
+                'post',
+                token,
+                { username, password }
+                );
             // redirect to dashboard if valid user else show error message
             if(response.access){
                 dispatch(userLogin({
                     access: response.access,
                     user: jwt_decode(response.access).user,
+                    firstname: jwt_decode(response.access).firstname,
+                    lastname: jwt_decode(response.access).lastname,
+                    email: jwt_decode(response.access).email,
                 }))
                 history.push("/");
             }

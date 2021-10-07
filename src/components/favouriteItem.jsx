@@ -7,7 +7,7 @@ import '../styles/favouriteItem.css'
 export default function FavouriteItem({id, poster_path, title, release_date, toggleFavourite}) {
 
     function handleImageError(e){
-        e.target.src = '/assets/poster_default.jpeg'
+        e.target.src = '/assets/posterDefault.jpeg'
     }
 
     return (
@@ -20,7 +20,7 @@ export default function FavouriteItem({id, poster_path, title, release_date, tog
                 />
                 :
                 <img
-                    src={`/assets/poster_default.jpeg`}
+                    src={`/assets/posterDefault.jpeg`}
                     alt='poster'
                 />
             }

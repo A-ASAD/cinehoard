@@ -1,90 +1,86 @@
 import React, { useEffect } from 'react'
+import { useState } from 'react';
 import { Container, Spinner } from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'
-import { loadMovie, movieLoading, notFound, updateFavourite, updateWatchlist } from '../actions/movieDetails';
 import MovieDetailsContainer from '../components/movieDetailsContainer';
+import { sendRequest } from '../wrappers/apiWrappers';
 
 
 export default function MovieDetails() {
     const {id} = useParams();
-    const movie = useSelector(state => state.movieDetails);
+    const [movie, setMovie] = useState(null);
+    const [isNotFound, setIsNotFound] = useState(false);
+    const [updateCount, setUpdateCount] = useState(0);
     const {token} = useSelector(state => state.auth);
-    const dispatch = useDispatch();
 
     const toggleFavourite = async () => {
-        let response = await fetch(`http://localhost:8000/api/movies/toggle-favourite/${id}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-        response = await response.json();
+        let response = await sendRequest(
+            `movies/toggle-favourite/${id}`,
+            'post',
+            token,
+            );
         if(response.added){
-            dispatch(updateFavourite(true));
+            setMovie({...movie, is_favourite: true});
+            setUpdateCount(updateCount+1);
         }
         else if(response.removed){
-            dispatch(updateFavourite(false));
+            setMovie({...movie, is_favourite: false});
+            setUpdateCount(updateCount+1);
         }
     }
 
     const toggleWatchlist = async () => {
-        let response = await fetch(`http://localhost:8000/api/watchlist/toggle-watchlist/${id}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-        response = await response.json();
+        let response = await sendRequest(
+            `watchlist/toggle-watchlist/${id}`,
+            'post',
+            token,
+            );
         if(response.added){
-            dispatch(updateWatchlist(true));
+            setMovie({...movie, is_in_watchList: true});
+            setUpdateCount(updateCount+1);
         }
         else if(response.removed){
-            dispatch(updateWatchlist(false));
+            setMovie({...movie, is_in_watchList: false});
+            setUpdateCount(updateCount+1);
         }
     }
 
     const fetchMovieDetails = async () => {
-        let response = await fetch(`http://localhost:8000/api/movies/get-movie-details/${id}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-        response = await response.json();
-        if(response.error){
-            dispatch(notFound());
+        let response = await sendRequest(
+            `movies/get-movie-details/${id}`,
+            'get',
+            token,
+            );
+        if(!response.error){
+            setMovie(response);
         }
         else{
-            dispatch(loadMovie({
-                ...response.data[0],
-                isFavourite: response.is_favourite,
-                isInWatchlist: response.is_in_watchList,
-                toggleFavourites: toggleFavourite,
-                toggleWatchlist: toggleWatchlist,
-            }))
+            setIsNotFound(true);
         }
     }
 
 
     useEffect(() => {
-        dispatch(movieLoading());
         fetchMovieDetails();
         // eslint-disable-next-line
-    }, [])
+    }, [updateCount])
 
     return (
         <Container fluid>
-            {movie.isLoading?
+            {
+                isNotFound?
+                <div>Movie not found!</div>
+                :
+                movie?
+                <MovieDetailsContainer
+                    {...movie.data[0]}
+                    {...movie}
+                    toggleFavourite={toggleFavourite}
+                    toggleWatchlist={toggleWatchlist}
+                />
+                :
                 <div className='d-flex justify-content-center py-3 w-100'><Spinner animation='border' /></div>
-                :
-                movie.notFound?
-                    <div>Movie not found!</div>
-                :
-                <MovieDetailsContainer />
             }
         </Container>
     )

@@ -2,11 +2,13 @@ import {
     LOGIN_USER,
     LOGOUT_USER,
     USER_LOADING
-} from '../types/auth'
-
+} from './types'
 
 const initialState = {
     user: null,
+    firstname: null,
+    lastname: null,
+    email: null,
     token: null,
     isAuthenticated: false,
     isLoading: false,
@@ -18,6 +20,9 @@ const auth = (state=initialState, action) => {
             return {
                 token: action.payload.access,
                 user: action.payload.user,
+                firstname: action.payload.firstname,
+                lastname: action.payload.lastname,
+                email: action.payload.email,
                 isAuthenticated: true,
                 isLoading: false,
             }
@@ -32,6 +37,9 @@ const auth = (state=initialState, action) => {
             return {
                 ...state,
                 user: null,
+                firstname: null,
+                lastname: null,
+                email: null,
                 token: null,
                 isAuthenticated: false,
                 isLoading: false,

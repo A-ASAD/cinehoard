@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { PersistGate } from 'redux-persist/integration/react'
 
 import './styles/App.css'
+import { store, persistor } from "./store/persistStore";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import Dashboard from "./pages/dashboard";
@@ -16,7 +17,8 @@ import MovieDetails from "./pages/movieDetails";
 import Header from "./components/header";
 import Favourites from "./pages/favourites";
 import Watchlist from "./pages/watchlist";
-import { store, persistor } from "./persistStore";
+import NotFound from "./pages/notFound";
+import EditProfile from "./pages/editProfile";
 
 
 function App() {
@@ -29,11 +31,13 @@ function App() {
                 </PrivateRoute>
                 <Switch>
                     <PrivateRoute exact path="/"><Dashboard /></PrivateRoute>
-                    <PrivateRoute path='/movie/:id' ><MovieDetails /></PrivateRoute>
-                    <Route path="/login"><Login /></Route>
-                    <Route path="/signup"><Signup /></Route>
-                    <PrivateRoute path="/favourites"><Favourites /></PrivateRoute>
-                    <PrivateRoute path="/watchlist"><Watchlist /></PrivateRoute>
+                    <PrivateRoute exact path='/movie/:id' ><MovieDetails /></PrivateRoute>
+                    <PrivateRoute exact path="/favourites"><Favourites /></PrivateRoute>
+                    <PrivateRoute exact path="/watchlist"><Watchlist /></PrivateRoute>
+                    <PrivateRoute exact path="/edit-profile"><EditProfile /></PrivateRoute>
+                    <Route exact path="/login"><Login /></Route>
+                    <Route exact path="/signup"><Signup /></Route>
+                    <PrivateRoute path="*"><NotFound /></PrivateRoute>
                 </Switch>
             </Router>
             </PersistGate>

@@ -7,7 +7,7 @@ import '../styles/movieCard.css'
 export default function MovieCard({id, poster_path, title, release_date}) {
 
     function handleImageError(e){
-        e.target.src = '/assets/poster_default.jpeg'
+        e.target.src = '/assets/posterDefault.jpeg'
     }
 
     return (
@@ -21,7 +21,7 @@ export default function MovieCard({id, poster_path, title, release_date}) {
                     />
                     :
                     <img
-                        src={`/assets/poster_default.jpeg`}
+                        src={`/assets/posterDefault.jpeg`}
                         alt='poster'
                     />
                 }

@@ -8,10 +8,12 @@
     margin: 10px;
     padding: 0px;
     text-decoration: none;
+    transition: 0.5s;
 }
 
 .movieCard:hover{
     color: #ddd;
+    transform: scale(1.03, 1.03);
 }
 
 .movieCard img{

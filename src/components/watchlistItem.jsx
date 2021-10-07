@@ -1,17 +1,18 @@
 import { Button } from 'react-bootstrap'
 import React from 'react'
-
-import '../styles/watchlistItem.css'
 import { Link } from 'react-router-dom'
 
-export default function WatchlistItem({id, poster_path, title, release_date, toggleWatchlist}) {
+import '../styles/watchlistItem.css'
+
+
+export default function WatchlistItem({id, poster_path, title, release_date, is_watched, toggleWatchlist, toggleMarkAsWatched }) {
 
     function handleImageError(e){
-        e.target.src = '/assets/poster_default.jpeg'
+        e.target.src = '/assets/posterDefault.jpeg'
     }
 
     return (
-        <div className='favourite-item mx-3 my-3'>
+        <div className={`watchlist-item mx-3 my-3 ${is_watched?'watched':''}`}>
             {poster_path ?
                 <img
                     src={`https://image.tmdb.org/t/p/original${poster_path}`}
@@ -20,7 +21,7 @@ export default function WatchlistItem({id, poster_path, title, release_date, tog
                 />
                 :
                 <img
-                    src={`/assets/poster_default.jpeg`}
+                    src={`/assets/posterDefault.jpeg`}
                     alt='poster'
                 />
             }
@@ -33,8 +34,17 @@ export default function WatchlistItem({id, poster_path, title, release_date, tog
                 </div>
                 <div className='mt-3 px-3 pb-2'>
                     <Link to={`/movie/${id}`}><Button variant='secondary' size='sm' className='w-100'>View Details</Button></Link>
-                    <Button variant='secondary' size='sm' className='w-100 my-2'>Mark as Watched</Button>
-                    <Button variant='secondary' size='sm' onClick={() => toggleWatchlist(id)} className='w-100'>Remove</Button>
+                    {is_watched?
+                        <>
+                        <Button variant='secondary' size='sm' onClick={() => toggleMarkAsWatched(id)} className='w-100 my-2'>Mark as Unwatched</Button>
+                        <Button variant='secondary' size='sm' onClick={() => toggleWatchlist(id)} className='w-100'>Remove</Button>
+                        </>
+                        :
+                        <>
+                        <Button variant='secondary' size='sm' onClick={() => toggleMarkAsWatched(id, true)} className='w-100 my-2'>Mark as Watched</Button>
+                        <Button variant='secondary' size='sm' onClick={() => toggleWatchlist(id, true)} className='w-100'>Remove</Button>
+                        </>
+                    }
                 </div>
             </div>
         </div>

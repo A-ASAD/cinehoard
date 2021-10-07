@@ -1,7 +1,7 @@
 import {
     LOAD_MOVIES,
     MOVIES_LOADING
-} from '../types/movies';
+} from './types';
 
 
 export const loadMovies = (payload) => ({

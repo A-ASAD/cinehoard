@@ -1,13 +1,11 @@
 import { combineReducers } from "redux";
 
-import auth from './auth';
-import movieDetails from "./movieDetails";
-import movies from './movies'
+import auth from '../auth/reducer';
+import movies from '../movies/reducer'
 
 
 const rootReducer = combineReducers({
     auth,
-    movieDetails,
     movies,
 })
 
